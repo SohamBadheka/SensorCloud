@@ -1,9 +1,7 @@
 var amqp = require('amqp'), util = require('util');
 
 var sensorAdmin = require('./services/sensors');
-//var driver = require('./services/driver');
-//var admin = require('./services/sensors');
-//var ride = require('./services/ride');
+//var endUser = require('./services/endUser');
 //var billing = require('./services/billing');
 
 var cnn = amqp.createConnection({

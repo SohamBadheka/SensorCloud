@@ -104,8 +104,10 @@ exports.listSensors = function(msg, callback) {
 exports.activateSensor = function(msg, callback) {
 
     var name = msg.name;
+    console.log("sensor name is "+name);
     sensorSchema.update({name: name}, {$set:{status : true}}, function (err, users) {
         var json_response;
+        console.log(JSON.stringify(users));
         if (err)
             json_response = {"status": 400};
         else {
