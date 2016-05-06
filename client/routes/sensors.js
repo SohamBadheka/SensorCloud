@@ -129,9 +129,11 @@ exports.listSensors = function(req, res){
 
 exports.activateSensor = function(req, res){
 
+    var name = req.param('name');
     var msg_payload = {
 
-        "func": "activateSensor"
+        "func": "activateSensor",
+        "name": name
     }
     mq_client.make_request('sensorAdmin_queue', msg_payload, function (err, results) {
         console.log("results response " + JSON.stringify(results));

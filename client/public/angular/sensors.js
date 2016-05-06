@@ -43,6 +43,7 @@ Sensors.controller('listSensors',function($scope, $http) {
    // $scope.btnclass = false;
 
     $scope.activate = function(name){
+        alert(name);
         $http({
 
             method : "POST",
