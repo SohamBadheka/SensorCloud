@@ -1,7 +1,7 @@
 var amqp = require('amqp'), util = require('util');
 
 var sensorAdmin = require('./services/sensors');
-//var endUser = require('./services/endUser');
+var endUser = require('./services/endUser');
 //var billing = require('./services/billing');
 
 var cnn = amqp.createConnection({
@@ -15,10 +15,12 @@ var mongoose = require('mongoose');
 var connection = mongoose.connect("mongodb://localhost:27017/sensorCloud");
 
 cnn.on('ready', function() {
-    console.log("listening on sensorAdmin_queue");
+
+
 
     cnn.queue('sensorAdmin_queue', function (q) {
-        console.log("queue");
+        console.log("listening on sensorAdmin_queue");
+
         q.subscribe(function (message, headers, deliveryInfo, m) {
             console.log("sub");
             util.log("sensorAdmin_queue: ");
@@ -81,8 +83,24 @@ cnn.on('ready', function() {
                     });
                     break;
 
+                case "deactivateSensor":
+                    console.log('login sensor admin');
+                    sensorAdmin.deactivateSensor(message, function (err, res) {
+
+                        util.log("Correlation ID: " + m.correlationId);
+                        // return index sent
+                        cnn.publish(m.replyTo, res, {
+                            contentType: 'application/json',
+                            contentEncoding: 'utf-8',
+                            correlationId: m.correlationId
+                        });
+                    });
+                    break;
+
+
+
                 case "deleteSensor":
-                    sensorAdmin.deleteSensor(message, function(err, res){
+                    sensorAdmin.deleteSensor(message, function (err, res) {
                         util.log("Correlation ID: " + m.correlationId);
                         // return index sent
                         cnn.publish(m.replyTo, res, {
@@ -94,7 +112,60 @@ cnn.on('ready', function() {
                     break;
 
                 case "approveCustomer":
-                    sensorAdmin.approveCustomer(message, function(err, res){
+                    sensorAdmin.approveCustomer(message, function (err, res) {
+                        util.log("Correlation ID: " + m.correlationId);
+                        // return index sent
+                        cnn.publish(m.replyTo, res, {
+                            contentType: 'application/json',
+                            contentEncoding: 'utf-8',
+                            correlationId: m.correlationId
+                        });
+                    });
+            }
+        });
+    });
+    cnn.queue('endUser_queue', function (q) {
+
+        console.log("listening on endUser_queue");
+        q.subscribe(function (message, headers, deliveryInfo, m) {
+            console.log("sub");
+            util.log("endUser_queue: ");
+            util.log(util.format(deliveryInfo.routingKey, message));
+            util.log("Message: " + JSON.stringify(message));
+            util.log("DeliveryInfo: " + JSON.stringify(deliveryInfo));
+
+            switch (message.func) {
+                case "registerUser":
+
+                    endUser.registerUser(message, function (err, res) {
+
+                        util.log("Correlation ID: " + m.correlationId);
+                        // return index sent
+                        cnn.publish(m.replyTo, res, {
+                            contentType: 'application/json',
+                            contentEncoding: 'utf-8',
+                            correlationId: m.correlationId
+                        });
+                    });
+                    break;
+                case "loginCheckUser":
+
+                    endUser.loginCheckUser(message, function (err, res) {
+
+                        util.log("Correlation ID: " + m.correlationId);
+                        // return index sent
+                        cnn.publish(m.replyTo, res, {
+                            contentType: 'application/json',
+                            contentEncoding: 'utf-8',
+                            correlationId: m.correlationId
+                        });
+                    });
+                    break;
+
+                case "listActiveSensors":
+
+                    endUser.listActiveSensors(message, function (err, res) {
+
                         util.log("Correlation ID: " + m.correlationId);
                         // return index sent
                         cnn.publish(m.replyTo, res, {
@@ -107,3 +178,4 @@ cnn.on('ready', function() {
         });
     });
 });
+

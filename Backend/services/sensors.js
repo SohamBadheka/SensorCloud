@@ -120,3 +120,23 @@ exports.activateSensor = function(msg, callback) {
     });
 }
 
+exports.deactivateSensor = function(msg, callback) {
+
+    var name = msg.name;
+    console.log("sensor name is "+name);
+    sensorSchema.update({name: name}, {$set:{status : false}}, function (err, users) {
+        var json_response;
+        console.log(JSON.stringify(users));
+        if (err)
+            json_response = {"status": 400};
+        else {
+            if (users)
+                json_response = {"status": 200, "data": users};
+            else
+                json_response = {"status": 300};
+        }
+        callback(null, json_response);
+    });
+}
+
+
