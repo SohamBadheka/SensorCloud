@@ -30,7 +30,7 @@ app.controller('signup', function($scope, $http) {
 
                 }
             }).success(function(data) {
-
+                alert(JSON.stringify(data));
                 //checking the response data for statusCode
                 if (data.status == 400) {
 

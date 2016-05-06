@@ -1,3 +1,5 @@
+var mq_client = require('../rpc/client');
+
 exports.signupUser = function(req, res){
 
   res.render('signup');
@@ -16,34 +18,37 @@ exports.registerUser = function(req, res){
   var zipcode = req.param('zipcode');
   var phone = req.param('phone');
 
+console.log(fullname+" "+email+" "+password+" "+creditcard+" "+city+" "+state+" "+zipcode+" "+phone);
+  var msg_payload = {
+    "fullname": fullname,
+    "email": email,
+    "password": password,
+    "creditcard": creditcard,
+    "city": city,
+    "state": state,
+    "zipcode": zipcode,
+    "phone": phone,
+    "func": "registerUser"
+  };
 
-
-  var newUser = new userSchema({
-
-    fullname : fullname,
-    email : email,
-    password : password,
-    creditcard : creditcard,
-    city : city,
-    state : state,
-    zipcode : zipcode,
-    phone : phone
-  });
-
-  newUser.save(function(err) {
-    var json_responses;
+  mq_client.make_request('endUser_queue', msg_payload, function (err, results) {
+    console.log("results response "+JSON.stringify(results));
     if (err) {
-      console.log(err);
-      json_responses = { "status" : 400};
+      //console.log(err);
+      res.status(500).send(null);
     }
-
     else {
-      console.log('New User created!');
+      if(results.status == 200) {
 
-      json_responses = {"status" : 200};
-
+        json_response = {"status": 200, "data": results.data}
+        res.send(json_response);
+      }
+      else
+      {
+        json_response = {"status" : 400}
+        res.send(json_response);
+      }
     }
-    res.send(json_responses);
   });
 }
 
@@ -53,39 +58,60 @@ exports.loginUser = function(req, res){
 }
 
 exports.loginCheckUser = function (req, res) {
-  var email = req.param('email');
-  var password = req.param('password');
+  var email = req.param("email");
+  var password = req.param("password");
 
 
-  console.log("Values : " + email + " " + password);
-  userSchema.findOne({email: email, password: password}, function (err, users) {
+  var msg_payload = {
+    "email": email,
+    "password": password,
+    "func": "loginCheckUser"
+  };
 
 
-    console.log("inside");
-    var json_responses;
+  mq_client.make_request('endUser_queue', msg_payload, function (err, results) {
+
     if (err) {
-      console.log(err);
-      json_responses = {"status": 400};
-      res.send(json_responses);
+      //console.log(err);
+      res.status(500).send(null);
     }
-
     else {
-      if (users) {
-        req.session.email = email;
-        console.log('Login successful');
-        json_responses = {"status": 200};
-        res.send(json_responses);
+      if(results.status == 200) {
+        //console.log("about results" + JSON.stringify(results));
+        req.session.endUser = results.data;
+        //console.log("login " + req.session.adminId);
+        json_response = {"status": 200, "data": results.data}
+        res.send(json_response);
       }
-      else {
-        console.log("No user found !");
-        json_responses = {"status": 300};
-        res.send(json_responses);
+      else
+      {
+        json_response = {"status" : 300}
+        res.send(json_response);
       }
     }
-
   });
 }
+exports.listActiveSensors = function(req, res){
 
+  var msg_payload = {
+    "func": "listActiveSensors"
+  }
+  mq_client.make_request("endUser_queue", msg_payload, function(err, results){
+    //console.log(JSON.stringify("aayu "+JSON.stringify(results.data)));
+    if (err) {
+      //console.log(err);
+      res.status(500).send(null);
+    }
+    else {
+
+      //console.log("about results" + JSON.stringify(results));
+      json_response = {"status": 200, "data": results.data};
+      console.log("sending "+JSON.stringify(json_response));
+      res.send(json_response);
+
+    }
+  });
+}
 
 exports.userDashboard = function(req, res){
   res.render('userDashboard');

@@ -52,11 +52,14 @@ app.post('/loginCheckUser',endUser.loginCheckUser);
 app.get('/loginSensorAdmin', sensors.loginSensorAdmin);
 app.post('/loginCheckSensorAdmin', sensors.loginCheckSensorAdmin);
 app.get('/userDashboard',endUser.userDashboard);
+app.get('/listActiveSensors', endUser.listActiveSensors);
 
 app.get('/sensorAdminDashboard',sensors.sensorAdminDashboard);
 app.post('/addSensorData',sensors.addSensorData);
 app.get('/listSensors',sensors.listSensors);
+
 app.post('/activateSensor',sensors.activateSensor);
+app.post('/deactivateSensor',sensors.deactivateSensor);
 //app.post('/deleteSensor', sensors.deleteSensor);
 //app.get('/test',sensors.testSensor);
 //app.get('/map',map.showMap);

@@ -40,22 +40,8 @@ Sensors.controller('addSensor', function($scope, $http) {
 })
 
 Sensors.controller('listSensors',function($scope, $http) {
-   // $scope.btnclass = false;
-
-    $scope.activate = function(name){
-        alert(name);
-        $http({
-
-            method : "POST",
-            url : "/activateSensor",
-            data : {
-                "name" : name
-            }
-
-        }).success(function(data){
-
-        })
-    }
+    // $scope.btnclass = false;
+    alert('done');
     $http({
 
         method: "GET",
@@ -72,20 +58,114 @@ Sensors.controller('listSensors',function($scope, $http) {
         }
         else {
 
-            for(i =0 ; i<data.data.length; i++) {
+            for (i = 0; i < data.data.length; i++) {
                 if (data.data[i].status == false) {
 
+                    alert(data.data[i].name);
                     data.data[i].status = "activate";
-                    $scope.btnclass = false;
                 }
                 else {
                     data.data[i].status = "deactivate";
-                    $scope.btnclass = true;
+
                 }
 
             }
             $scope.sensorInfo = data.data;
 
         }
-   })
-})
+    });
+$scope.activity = function (name) {
+        alert(name);
+        if ($scope.status=="activate") {
+            $http({
+
+                method: "POST",
+                url: "/activateSensor",
+                data: {
+                    "name": name
+                }
+
+            }).success(function (data) {
+                $http({
+
+                    method: "GET",
+                    url: '/listSensors'
+
+                }).success(function (data) {
+                    //checking the response data for statusCode
+                    alert(JSON.stringify(data));
+                    if (data.status == 400) {
+                        alert("something went wrong !");
+                    }
+                    else if (data.status == 300) {
+                        alert(data);
+                    }
+                    else {
+
+                        for (i = 0; i < data.data.length; i++) {
+                            if (data.data[i].status == false) {
+
+                                data.data[i].status = "activate";
+
+                            }
+                            else {
+                                data.data[i].status = "deactivate";
+
+                            }
+
+                        }
+                        $scope.sensorInfo = data.data;
+
+                    }
+                })
+            })
+        }
+        else{
+
+            $http({
+
+                method: "POST",
+                url: "/deactivateSensor",
+                data: {
+                    "name": name
+                }
+
+            }).success(function (data) {
+                $http({
+
+                    method: "GET",
+                    url: '/listSensors'
+
+                }).success(function (data) {
+                    //checking the response data for statusCode
+                    alert(JSON.stringify(data));
+                    if (data.status == 400) {
+                        alert("something went wrong !");
+                    }
+                    else if (data.status == 300) {
+                        alert(data);
+                    }
+                    else {
+
+                        for (i = 0; i < data.data.length; i++) {
+                            if (data.data[i].status == false) {
+
+                                data.data[i].status = "activate";
+                                $scope.activated = false;
+                            }
+                            else {
+                                data.data[i].status = "deactivate";
+                                $scope.activated = true;
+                            }
+
+                        }
+                        $scope.sensorInfo = data.data;
+
+                    }
+                })
+            })
+
+        }
+
+    }
+});

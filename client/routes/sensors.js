@@ -97,6 +97,7 @@ exports.addSensorData = function(req, res) {
     });
 }
 
+
 exports.listSensors = function(req, res){
 
     var name = req.name;
@@ -158,6 +159,36 @@ exports.activateSensor = function(req, res){
     });
 }
 
+exports.deactivateSensor = function(req, res){
+
+    var name = req.param('name');
+    var msg_payload = {
+
+        "func": "deactivateSensor",
+        "name": name
+    }
+    mq_client.make_request('sensorAdmin_queue', msg_payload, function (err, results) {
+        console.log("results response " + JSON.stringify(results));
+        if (err) {
+            //console.log(err);
+            res.status(500).send(null);
+        }
+        else {
+            if (results.status == 200) {
+                //console.log("about results" + JSON.stringify(results));
+                json_response = {"status": 200, "data": results.data}
+                res.send(json_response);
+            }
+            else {
+                json_response = {"status": 300}
+                res.send(json_response);
+            }
+
+        }
+
+
+    });
+}
 
 /*
 exports.testSensor = function(req, res) {
