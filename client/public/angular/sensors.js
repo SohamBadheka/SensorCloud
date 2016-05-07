@@ -4,7 +4,7 @@ var Sensors = angular.module('Sensors', []);
 Sensors.controller('addSensor', function($scope, $http) {
 
     $scope.addSensor = function() {
-        alert($scope.name);
+
         $http({
 
             method : "POST",
@@ -23,7 +23,7 @@ Sensors.controller('addSensor', function($scope, $http) {
             }
         }).success(function(data) {
             //checking the response data for statusCode
-            alert(JSON.stringify(data));
+
             if(data.status == 400){
                 alert("something went wrong !");
             }
@@ -41,7 +41,7 @@ Sensors.controller('addSensor', function($scope, $http) {
 
 Sensors.controller('listSensors',function($scope, $http) {
     // $scope.btnclass = false;
-    alert('done');
+
     $http({
 
         method: "GET",
@@ -49,19 +49,16 @@ Sensors.controller('listSensors',function($scope, $http) {
 
     }).success(function (data) {
         //checking the response data for statusCode
-        alert(JSON.stringify(data));
+
         if (data.status == 400) {
             alert("something went wrong !");
         }
-        else if (data.status == 300) {
-            alert(data);
-        }
+
         else {
 
             for (i = 0; i < data.data.length; i++) {
                 if (data.data[i].status == false) {
 
-                    alert(data.data[i].name);
                     data.data[i].status = "activate";
                 }
                 else {
@@ -74,9 +71,12 @@ Sensors.controller('listSensors',function($scope, $http) {
 
         }
     });
-$scope.activity = function (name) {
-        alert(name);
-        if ($scope.status=="activate") {
+
+    $scope.activity = function (name, status) {
+
+
+        if (status=="activate") {
+
             $http({
 
                 method: "POST",
@@ -92,14 +92,12 @@ $scope.activity = function (name) {
                     url: '/listSensors'
 
                 }).success(function (data) {
-                    //checking the response data for statusCode
-                    alert(JSON.stringify(data));
+
+
                     if (data.status == 400) {
                         alert("something went wrong !");
                     }
-                    else if (data.status == 300) {
-                        alert(data);
-                    }
+
                     else {
 
                         for (i = 0; i < data.data.length; i++) {
@@ -138,13 +136,11 @@ $scope.activity = function (name) {
 
                 }).success(function (data) {
                     //checking the response data for statusCode
-                    alert(JSON.stringify(data));
+
                     if (data.status == 400) {
                         alert("something went wrong !");
                     }
-                    else if (data.status == 300) {
-                        alert(data);
-                    }
+
                     else {
 
                         for (i = 0; i < data.data.length; i++) {

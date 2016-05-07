@@ -60,6 +60,8 @@ app.get('/listSensors',sensors.listSensors);
 
 app.post('/activateSensor',sensors.activateSensor);
 app.post('/deactivateSensor',sensors.deactivateSensor);
+app.post('/subscribeSensor', endUser.subscribeSensor);
+app.get('/mySensors', endUser.mySesnors);
 //app.post('/deleteSensor', sensors.deleteSensor);
 //app.get('/test',sensors.testSensor);
 //app.get('/map',map.showMap);

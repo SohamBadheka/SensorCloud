@@ -97,7 +97,7 @@
 				</div>
 			</div>
 			</a>
-				<div class="modal fade" id="mySensors" role="dialog">
+				<div class="modal fade" id="mySensors" role="dialog" ng-controller="mySensors">
 					<!-- Modal content-->
 					<div class="modal-dialog">
 						<div class="modal-content">
@@ -113,35 +113,15 @@
 										<th>Name</th>
 										<th>Type</th>
 										<th>Status</th>
-										<th>Manage</th>
 
 									</tr>
 									</thead>
 									<tbody>
-									<tr>
-										<th scope="row">1</th>
-										<td>Sensor1</td>
-										<td>Temperature</td>
-										<td>
-											<div class="switch-wrapper">
-												<input type="checkbox" value="1" checked>
-											</div>
-										</td>
-										<td>View/Edit/Delete</td>
-									</tr>
-									<tr>
-										<th scope="row">2</th>
-										<td>Sensor2</td>
-										<td>Wind</td>
-										<td>
-											<div class="switch-wrapper">
-												<input type="checkbox" value="1" checked>
-											</div>
-										</td>
-
-										<td>View/Edit/Delete</td>
-									</tr>
-
+									<tr ng-repeat="k in mySensors">
+										<td>{{$index+1}}</td>
+										<td>{{k.name}}</td>
+										<td>{{k.type}}</td>
+										<td><button class="btn btn-primary">Unsubscribe</button></td>
 									</tbody>
 								</table>
 
@@ -198,7 +178,7 @@
 										<td>{{k.owner}}</td>
 										<td>{{k.city}}</td>
 										<td>{{k.state}}</td>
-										<td><button class="btn btn-primary">Subscribe</button></td>
+										<td><button class="btn btn-primary" ng-click="activity(k.name, k.status);">Subscribe</button></td>
 									</tr>
 
 

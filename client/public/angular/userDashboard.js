@@ -2,47 +2,79 @@
 var listActiveSensors = angular.module('listActiveSensors', []);
 
 listActiveSensors.controller('listActiveSensors', function($scope, $http) {
-    alert('one');
 
-   /* $http({
+    $http({
 
         method: "GET",
         url: '/listActiveSensors'
 
     }).success(function (data) {
-            alert("yeads");
+
+        if (data.status == 400) {
+            alert("something went wrong !");
+        }
+
+        else {
+            for (i = 0; i < data.data.length; i++) {
+                if (data.data[i].status == false) {
 
 
-            if(data.status == 400){
-                alert("something went wrong !");
+                    data.data[i].status = "subscribe";
+                }
+                else {
+                    data.data[i].status = "unsubscribe";
+
+                }
+
             }
+            $scope.sensors = data.data;
+        }
 
-            else {
-                $scope.sensors = data.data;
-            }
-        }).error(function(err){
-            alert('error');
-        });
-});*/
+    }).error(function (error) {
+        alert('error');
+    });
 
-$http({
 
-    method: "GET",
-    url: '/listActiveSensors'
+    $scope.activity = function (name, status) {
 
-}).success(function (data) {
-    //checking the response data for statusCode
-    alert(JSON.stringify(data));
-    if (data.status == 400) {
-        alert("something went wrong !");
+        if (status == "subscribe") {
+            $http({
+
+                method: "POST",
+                url: "/subscribeSensor",
+                data: {
+                    "name": name
+                }
+
+            }).success(function (data) {
+
+            })
+        }
     }
+});
 
-    else {
 
-        $scope.sensors = data.data;
+listActiveSensors.controller('mySensors', function($scope, $http) {
 
-    }
-}).error(function (error) {
-    alert('error');
-})
-})
+    $http({
+
+        method: "GET",
+        url: '/mySensors'
+
+    }).success(function (data) {
+
+
+        if (data.status == 400) {
+            alert("something went wrong !");
+        }
+
+        else {
+
+            $scope.mySensors = data.data;
+        }
+
+    }).error(function (error) {
+        alert('error');
+    });
+});
+

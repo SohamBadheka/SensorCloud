@@ -137,7 +137,7 @@ exports.activateSensor = function(req, res){
         "name": name
     }
     mq_client.make_request('sensorAdmin_queue', msg_payload, function (err, results) {
-        console.log("results response " + JSON.stringify(results));
+        console.log("--------- results response ---------" + JSON.stringify(results));
         if (err) {
             //console.log(err);
             res.status(500).send(null);

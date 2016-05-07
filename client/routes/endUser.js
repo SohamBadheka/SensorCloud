@@ -77,8 +77,8 @@ exports.loginCheckUser = function (req, res) {
     }
     else {
       if(results.status == 200) {
-        //console.log("about results" + JSON.stringify(results));
-        req.session.endUser = results.data;
+        console.log("about results" + JSON.stringify(results.data));
+        req.session.email = results.data;
         //console.log("login " + req.session.adminId);
         json_response = {"status": 200, "data": results.data}
         res.send(json_response);
@@ -92,7 +92,9 @@ exports.loginCheckUser = function (req, res) {
   });
 }
 exports.listActiveSensors = function(req, res){
-
+if(req.session.email){
+  console.log("che active");
+}
   var msg_payload = {
     "func": "listActiveSensors"
   }
@@ -113,10 +115,84 @@ exports.listActiveSensors = function(req, res){
   });
 }
 
+
 exports.userDashboard = function(req, res){
-  res.render('userDashboard');
+  if(req.session.email){
+  console.log(req.session.email);
+    res.header('Cache-Control','no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    res.render('userDashboard');
+  }
+  else{
+    res.redirect('/');
+  }
+
 };
 
-exports.mySesnors = function(req, res){
-  res.render('');
+exports.subscribeSensor = function(req, res){
+  var name = req.param('name');
+
+  var msg_payload = {
+    "email": "test@test.com",
+    "name" : name,
+    "func": "subscribeSensor"
+  };
+
+
+  mq_client.make_request('endUser_queue', msg_payload, function (err, results) {
+
+    if (err) {
+      //console.log(err);
+      res.status(500).send(null);
+    }
+    else {
+      if(results.status == 200) {
+        console.log("about results" + JSON.stringify(results.data));
+        req.session.email = results.data;
+        //console.log("login " + req.session.adminId);
+        json_response = {"status": 200, "data": results.data}
+        res.send(json_response);
+      }
+      else
+      {
+        json_response = {"status" : 400}
+        res.send(json_response);
+      }
+    }
+  });
+}
+
+
+
+exports.mySesnors = function(req, res) {
+
+  var email = "test@test.com"
+console.log("In routes mysensor");
+  var msg_payload = {
+    "email": email,
+    "func": "mySensors"
+  };
+
+
+  mq_client.make_request('endUser_queue', msg_payload, function (err, results) {
+
+    console.log("in makerequest"+ JSON.stringify(results));
+    if (err) {
+      //console.log(err);
+      res.status(500).send(null);
+    }
+    else {
+      if (results.status == 200) {
+        console.log("My sensors " + JSON.stringify(results.data));
+
+        //console.log("login " + req.session.adminId);
+        json_response = {"status": 200, "data": results.data}
+        res.send(json_response);
+      }
+      else {
+        json_response = {"status": 300}
+        res.send(json_response);
+      }
+    }
+
+  });
 }
