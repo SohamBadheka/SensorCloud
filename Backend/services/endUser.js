@@ -102,6 +102,69 @@ exports.listActiveSensors = function (msg, callback) {
     });
 
 }
+exports.subscribeSensor = function (msg, callback) {
+
+    var email = msg.email;
+    var name = msg.name;
+    console.log("jordar data is "+email+" "+name);
+
+
+    sensorSchema.find({name:name}, function (err, users) {
+        var json_resp;
+
+        var result = users;
+        console.log("av avaa "+result);
+
+            if(users) {
+                userSchema.update({email: email}, {subscribedSensors: result}, {upsert: true}, function (err, users2) {
+
+                    if (err) {
+                        console.log(err);
+                        json_resp = {"status": 400};
+
+                    }
+
+                    else {
+                        console.log("sensors found" +JSON.stringify(users2));
+
+                        json_resp = {"status": 200, "data": users2};
+
+                    }
+                    callback(null, json_resp);
+                });
+            }
+
+            else{
+
+                console.log("nothing found ! ");
+
+            }
+
+        });
+
+}
+
+
+exports.mySensors = function(msg, callback) {
+
+    var email = msg.email;
+    console.log("-------In my sensor---------- "+email);
+    userSchema.find({"email": email}, function (err, users) {
+        var json_response;
+        console.log("In sensor response "+JSON.stringify(users[0].subscribedSensors));
+        if (err)
+            json_response = {"status": 400};
+        else {
+            if (users)
+                json_response = {"status": 200, "data": users[0].subscribedSensors};
+            else
+                json_response = {"status": 300};
+        }
+        callback(null, json_response);
+    });
+}
+
+
 
 
 

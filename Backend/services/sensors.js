@@ -107,6 +107,7 @@ exports.activateSensor = function(msg, callback) {
     console.log("sensor name is "+name);
     sensorSchema.update({name: name}, {$set:{status : true}}, function (err, users) {
         var json_response;
+        console.log("-------------updated----------");
         console.log(JSON.stringify(users));
         if (err)
             json_response = {"status": 400};
@@ -123,7 +124,7 @@ exports.activateSensor = function(msg, callback) {
 exports.deactivateSensor = function(msg, callback) {
 
     var name = msg.name;
-    console.log("sensor name is "+name);
+    console.log("sensor name is for deactivate"+name);
     sensorSchema.update({name: name}, {$set:{status : false}}, function (err, users) {
         var json_response;
         console.log(JSON.stringify(users));
@@ -138,5 +139,6 @@ exports.deactivateSensor = function(msg, callback) {
         callback(null, json_response);
     });
 }
+
 
 

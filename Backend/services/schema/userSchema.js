@@ -28,7 +28,8 @@ var users= new Schema({
         city : String,
         state : String,
         zipcode : String,
-        phone : String
+        phone : String,
+        subscribedSensors : { type: Array, default: null }
 
 },
     {
