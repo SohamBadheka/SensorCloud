@@ -17,6 +17,46 @@
 	<script src="angular/userDashboard.js"></script>
 
 <script src="javascripts/respond.min.js"></script>
+	<script>
+
+		$(document).ready(function () {
+
+			$('.analysis').hide();
+			$('.billing').hide();
+			$('.dashboard').show();
+			$('.map').hide();
+
+
+			$(".click0").on("click", function(){
+
+				$('.dashboard').show();
+				$('.analysis').hide();
+				$('.billing').hide();
+				$('.map').hide();
+
+			})
+
+			$(".click1").on("click", function () {
+				$('.analysis').hide();
+				$('.billing').hide();
+				$('.dashboard').hide();
+				$('.map').show();
+			})
+
+			$(".click2").on("click", function () {
+				$('.analysis').show();
+				$('.billing').hide();
+				$('.dashboard').hide();
+				$('.map').hide();
+			})
+			$(".click3").on("click", function () {
+				$('.analysis').hide();
+				$('.billing').show();
+				$('.dashboard').hide();
+				$('.map').hide();
+			})
+		});
+	</script>
 
 
 </head>
@@ -54,10 +94,10 @@
 			</div>
 		</form>
 		<ul class="nav menu">
-			<li class="active"><a href="userDashboard.ejs"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Dashboard</a></li>
-			<li><a href="/map" class="click1"><svg class="glyph stroked calendar"><use xlink:href="#stroked-calendar"></use></svg>Map</a></li>
-			<li><a href="/analysis" class="click2"><svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg>Analysis</a></li>
-			<li><a href="/billing" class="click3"><svg class="glyph stroked table"><use xlink:href="#stroked-table"></use></svg>Biling</a></li>
+			<li><a href="javascript:void(0)" class="click0">Dashboard</a></li>
+			<li><a href="javascript:void(0)" class="click1">Map</a></li>
+			<li><a href="javascript:void(0)" class="click2">Analysis</a></li>
+			<li><a href="javascript:void(0)" class="click3">Biling</a></li>
 
 		</ul>
 
@@ -178,7 +218,7 @@
 										<td>{{k.owner}}</td>
 										<td>{{k.city}}</td>
 										<td>{{k.state}}</td>
-										<td><button class="btn btn-primary" ng-click="activity(k.name, k.status);">Subscribe</button></td>
+										<td><button class="btn btn-primary" ng-click="subscribe(k.name);">{{subscribebtn}}</button></td>
 									</tr>
 
 
@@ -195,9 +235,51 @@
 			</div><!--/.row-->
 		</div>
 
+		<div class="map">
 
+			<p>map</p>
+		</div>
+		<div class="analysis" ng-controller="analysis">
+
+			<table class="table">
+				<thead class="thead-inverse">
+				<tr>
+					<th>#</th>
+					<th>Name</th>
+					<th>Type</th>
+					<th>city</th>
+					<th>Your Action</th>
+
+
+				</tr>
+				</thead>
+
+				<tbody>
+				<tr ng-repeat="k in sensors">
+				<td>{{$index+1}}</td>
+				<td>{{k.name}}</td>
+				<td>{{k.type}}</td>
+				<td>{{k.city}}</td>
+				<td><button class="btn btn-success" ng-click="getCurrentData(k.type,k.city);">Current Data</button><button style="margin-left:5px;" class="btn btn-success" ng-click="getForecast(k.type,k.city);">Forecast</button></td>
+				<tr>
+				</tbody>
+			</table>
+			<div ng-show="myValue">
+
+				<h1>Details :</h1><hr>
+				<p>Weather : {{weather}}</p>
+				<p>Temp : {{temp}}</p>
+				<p>Min temp : {{minTemp}}</p>
+				<p>Max temp : {{maxTemp}}</p>
+				<p>Pressure : {{pressure}}</p>
+				<p>Humidity : {{humidity}}</p>
+			</div>
 		</div>
 
+		<div class="billing">
+			<p>billing</p>
+		</div>
+</div>
 </body>
 
 </html>

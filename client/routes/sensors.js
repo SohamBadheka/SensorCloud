@@ -190,15 +190,19 @@ exports.deactivateSensor = function(req, res){
     });
 }
 
-/*
-exports.testSensor = function(req, res) {
+
+exports.getCurrentData = function(req, res) {
+    var type = req.type;
+    var city = req.city;
     var request = require('request');
-    request('http://api.openweathermap.org/data/2.5/forecast/city?id=524901&APPID=f17460fa055c8a087eb18ff9b451dc57', function (error, response, body) {
+    var r = "http://api.openweathermap.org/data/2.5/weather?q="+city+"&APPID=f17460fa055c8a087eb18ff9b451dc57";
+    request(r, function (error, response, body) {
+        //console.log("before condition"+body);
         if (!error && response.statusCode == 200) {
             console.log(body);
             res.send(body);
         }
     });
-}*/
+}
 
 

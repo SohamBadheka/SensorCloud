@@ -147,8 +147,7 @@ exports.subscribeSensor = function(req, res){
     else {
       if(results.status == 200) {
         console.log("about results" + JSON.stringify(results.data));
-        req.session.email = results.data;
-        //console.log("login " + req.session.adminId);
+
         json_response = {"status": 200, "data": results.data}
         res.send(json_response);
       }
@@ -163,10 +162,42 @@ exports.subscribeSensor = function(req, res){
 
 
 
+exports.listToSubscribeSensors = function(req, res) {
+
+
+  var msg_payload = {
+    "email": "test@test.com",
+    "func": "listToSubscribeSensors"
+  };
+
+
+  mq_client.make_request('endUser_queue', msg_payload, function (err, results) {
+
+    if (err) {
+      //console.log(err);
+      res.status(500).send(null);
+    }
+    else {
+      if (results.status == 200) {
+        console.log("List to Subscribe sensors results" + JSON.stringify(results.data));
+
+        //console.log("login " + req.session.adminId);
+        json_response = {"status": 200, "data": results.data}
+        res.send(json_response);
+      }
+      else {
+        json_response = {"status": 400}
+        res.send(json_response);
+      }
+    }
+  });
+}
+
+
 exports.mySesnors = function(req, res) {
 
   var email = "test@test.com"
-console.log("In routes mysensor");
+  console.log("In routes mysensor");
   var msg_payload = {
     "email": email,
     "func": "mySensors"
