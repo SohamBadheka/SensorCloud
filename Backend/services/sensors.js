@@ -1,4 +1,5 @@
 var sensorSchema = require('./schema/sensorSchema');
+var subscribeSensorSchema = require('./schema/subscribeSensorSchema');
 
 
 exports.loginSensorAdmin = function (msg, callback) {
@@ -112,8 +113,21 @@ exports.activateSensor = function(msg, callback) {
         if (err)
             json_response = {"status": 400};
         else {
-            if (users)
+            if (users){
                 json_response = {"status": 200, "data": users};
+                //subscribeSensorSchema.find({}, function (err, user) {
+
+
+                /*subscribeSensorSchema.insert({"status" : users.status,"state":users.state, "format" : users.format, "from": users.from, "to": users.to, "name" : users.name, "desc" : users.desc, "city":users.city, "owner" : users.owner, "type" : users.type }, function(err, user){
+                    if(err){
+                        console.log("error");
+                    }
+                    else
+                        console.log("saras");
+                });*/
+
+            }
+
             else
                 json_response = {"status": 300};
         }
