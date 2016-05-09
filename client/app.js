@@ -64,6 +64,7 @@ app.post('/subscribeSensor', endUser.subscribeSensor);
 app.get('/mySensors', endUser.mySesnors);
 app.get('/listToSubscribeSensors', endUser.listToSubscribeSensors);
 app.get('/getCurrentData',sensors.getCurrentData);
+app.get('/getForecastData', sensors.getForecastData);
 
 //app.post('/deleteSensor', sensors.deleteSensor);
 

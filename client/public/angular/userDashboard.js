@@ -90,7 +90,8 @@ listActiveSensors.controller('mySensors', function($scope, $http) {
 
 listActiveSensors.controller('analysis', function($scope, $http) {
 
-    $scope.myValue = false;
+    $scope.currentData = false;
+    $scope.forecastData = false;
     $http({
 
         method: "GET",
@@ -112,9 +113,9 @@ listActiveSensors.controller('analysis', function($scope, $http) {
         alert('error');
     });
     $scope.getCurrentData = function (type, city) {
-        $scope.myValue = true;
+        $scope.currentData = true;
+        $scope.forecastData = false;
 
-        alert(type+" "+city);
         $http({
 
             method: "GET",
@@ -126,7 +127,7 @@ listActiveSensors.controller('analysis', function($scope, $http) {
 
         }).success(function (data) {
 
-            alert("Main thing is "+data.weather[0].main+" Temp is "+data.main);
+
             if (data.status == 400) {
                 alert("something went wrong !");
             }
@@ -143,6 +144,34 @@ listActiveSensors.controller('analysis', function($scope, $http) {
             }
         });
   }
-});
+    $scope.getForecastData = function (type, city) {
 
+        $scope.forecastData = true;
+        $scope.currentData = false;
+
+        $http({
+
+            method: "GET",
+            url: '/getForecastData',
+            params:{
+                "type" : type,
+                "city" : city
+            }
+
+        }).success(function (data) {
+
+
+            if (data.status == 400) {
+                alert("something went wrong !");
+            }
+
+            else {
+
+                $scope.forecastData = data.list;
+               // $scope.weatherData = data.weather[0];
+            }
+        });
+    }
+
+});
 

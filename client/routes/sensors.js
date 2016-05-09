@@ -205,4 +205,19 @@ exports.getCurrentData = function(req, res) {
     });
 }
 
+exports.getForecastData = function(req, res) {
+    var type = req.type;
+    var city = req.city;
+
+    var request = require('request');
+    var r = "http://api.openweathermap.org/data/2.5/forecast?q="+city+"&appid=f17460fa055c8a087eb18ff9b451dc57";
+
+    request(r, function (error, response, body) {
+        //console.log("before condition"+body);
+        if (!error && response.statusCode == 200) {
+            console.log(body);
+            res.send(body);
+        }
+    });
+}
 

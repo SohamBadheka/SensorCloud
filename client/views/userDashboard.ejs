@@ -260,21 +260,52 @@
 				<td>{{k.name}}</td>
 				<td>{{k.type}}</td>
 				<td>{{k.city}}</td>
-				<td><button class="btn btn-success" ng-click="getCurrentData(k.type,k.city);">Current Data</button><button style="margin-left:5px;" class="btn btn-success" ng-click="getForecast(k.type,k.city);">Forecast</button></td>
+				<td><button class="btn btn-success" ng-click="getCurrentData(k.type,k.city);">Current Data</button><button style="margin-left:5px;" class="btn btn-success" ng-click="getForecastData(k.type,k.city);">Forecast</button></td>
 				<tr>
 				</tbody>
 			</table>
-			<div ng-show="myValue">
 
-				<h1>Details :</h1><hr>
-				<p>Weather : {{weather}}</p>
-				<p>Temp : {{temp}}</p>
-				<p>Min temp : {{minTemp}}</p>
-				<p>Max temp : {{maxTemp}}</p>
-				<p>Pressure : {{pressure}}</p>
-				<p>Humidity : {{humidity}}</p>
-			</div>
-		</div>
+
+
+				<div ng-show="currentData">
+					<h1>Details :</h1><hr>
+				<h2 style="margin-left:5px;;">Current statistics for weather data !</h2>
+
+					<p>Weather : {{weather}}</p>
+					<p>Temp : {{temp}}</p>
+					<p>Min temp : {{minTemp}}</p>
+					<p>Max temp : {{maxTemp}}</p>
+					<p>Pressure : {{pressure}}</p>
+					<p>Humidity : {{humidity}}</p>
+				</div>
+
+
+					<div class="row" ng-show="forecastData">
+
+						<h1>Details :</h1><hr>
+						<h2 style="margin-left:5px;">Weather forecast report for next 5 days !</h2>
+						<hr>
+						<div class="col-sm-4 col-lg-4 col-md-4" ng-repeat="k in forecastData">
+							<div class="thumbnail">
+								<img src="http://placehold.it/320x150" alt="">
+								<div class="caption">
+
+									<p>Time : {{k.dt_txt}}</p>
+									<p>Weather : {{k.weather[0].main}} </p>
+									<p>Temp : {{k.main.temp}}</p>
+
+									<p>Pressure : {{k.main.pressure}}</p>
+									<p>Humidity : {{k.main.humidity}}</p>
+
+
+								</div>
+
+							</div>
+						</div>
+						</div>
+
+
+				</div>
 
 		<div class="billing">
 			<p>billing</p>
