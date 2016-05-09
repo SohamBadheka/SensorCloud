@@ -190,6 +190,20 @@ cnn.on('ready', function() {
                     });
                     break;
 
+                case "listToSubscribeSensors":
+
+                    endUser.listToSubscribeSensors(message, function (err, res) {
+
+                        util.log("Correlation ID: " + m.correlationId);
+                        // return index sent
+                        cnn.publish(m.replyTo, res, {
+                            contentType: 'application/json',
+                            contentEncoding: 'utf-8',
+                            correlationId: m.correlationId
+                        });
+                    });
+                    break;
+
                 case "mySensors":
 
                     endUser.mySensors(message, function (err, res) {
