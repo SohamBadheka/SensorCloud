@@ -14,8 +14,9 @@ exports.myBills = function(msg, callback) {
             if (!users)
                 json_response = {"status": 300};
 
-            else
-                json_response = {"status": 200, "data": users};
+            else{
+                    json_response = {"status": 200, "data": users};
+                }
         }
         callback(null, json_response);
     });
