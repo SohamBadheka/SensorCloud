@@ -17,31 +17,26 @@ var autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(connection);
 
 
-var users= new Schema({
-        userId : {
+var bills= new Schema({
+        billId : {
             type : String
         },
-        fullname : String,
-        email : String,
-        password : String,
-        creditcard : String,
-        city : String,
-        state : String,
-        zipcode : String,
-        phone : String,
-        subscribedSensors : { type: Array, default: [] }
-
-},
+        user : String,
+        to : String,
+        from : String,
+        sensor : String,
+        amount : String
+    },
     {
         _id : true
     });
 
-var Users = mongoose.model('Users', users);
-users.plugin(autoIncrement.plugin, {
-    model: 'Users',
-    field: 'userId',
+var Bills = mongoose.model('Bills', bills);
+bills.plugin(autoIncrement.plugin, {
+    model: 'Bills',
+    field: 'billId',
     startAt: 1,
     incrementBy: 1
 });
 
-module.exports = Users;
+module.exports = Bills;

@@ -2,7 +2,8 @@ var amqp = require('amqp'), util = require('util');
 
 var sensorAdmin = require('./services/sensors');
 var endUser = require('./services/endUser');
-//var billing = require('./services/billing');
+var bills = require('./services/bills');
+
 
 var cnn = amqp.createConnection({
     host : '127.0.0.1'
@@ -15,7 +16,6 @@ var mongoose = require('mongoose');
 var connection = mongoose.connect("mongodb://localhost:27017/sensorCloud");
 
 cnn.on('ready', function() {
-
 
 
     cnn.queue('sensorAdmin_queue', function (q) {
@@ -96,7 +96,6 @@ cnn.on('ready', function() {
                         });
                     });
                     break;
-
 
 
                 case "deleteSensor":
@@ -189,6 +188,19 @@ cnn.on('ready', function() {
                         });
                     });
                     break;
+                case "unsubscribeSensor":
+
+                    endUser.unsubscribeSensor(message, function (err, res) {
+
+                        util.log("Correlation ID: " + m.correlationId);
+                        // return index sent
+                        cnn.publish(m.replyTo, res, {
+                            contentType: 'application/json',
+                            contentEncoding: 'utf-8',
+                            correlationId: m.correlationId
+                        });
+                    });
+                    break;
 
                 case "listToSubscribeSensors":
 
@@ -217,8 +229,22 @@ cnn.on('ready', function() {
                         });
                     });
 
-            }
-        });
-    });
-});
+                case "myBills":
 
+                    console.log("case My bills");
+                    bills.myBills(message, function (err, res) {
+
+                        console.log("into mybills function server");
+                        util.log("Correlation ID: " + m.correlationId);
+                        // return index sent
+                        cnn.publish(m.replyTo, res, {
+                            contentType: 'application/json',
+                            contentEncoding: 'utf-8',
+                            correlationId: m.correlationId
+                        });
+                    });
+            }
+
+            });
+        });
+});

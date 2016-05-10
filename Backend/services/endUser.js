@@ -1,5 +1,6 @@
 var userSchema = require('./schema/userSchema');
 var sensorSchema = require('./schema/sensorSchema');
+var billingSchema = require('./schema/billingSchema');
 var subscribeSensorSchema = require('./schema/subscribeSensorSchema');
 
 exports.registerUser = function (msg, callback) {
@@ -94,9 +95,9 @@ exports.listActiveSensors = function (msg, callback) {
         }
 
         else {
-                console.log("sensors found"+ JSON.stringify(users));
+            console.log("sensors found"+ JSON.stringify(users));
 
-                json_resp = {"status": 200, "data":users};
+            json_resp = {"status": 200, "data":users};
 
         }
         callback(null, json_resp);
@@ -116,41 +117,123 @@ exports.subscribeSensor = function (msg, callback) {
         var result = users;
         console.log("Specific info of sensor "+result);
 
-            if(users) {
-                    userSchema.update({email: email}, {$push : {subscribedSensors:{$each: result}}}, function (err, users2) {
+        if(users) {
+            userSchema.update({email: email}, {$push : {subscribedSensors:{$each: result}}}, function (err, users2) {
 
 
-                    if (err) {
-                        console.log(err);
-                        json_resp = {"status": 400};
+                if (err) {
+                    console.log(err);
+                    json_resp = {"status": 400};
 
-                    }
+                }
 
-                    else {
-                        sensorSchema.find({"status":true},function(err, users){
-                            if(users) {
+                else {
+                    var newBill = new billingSchema({
 
-                                console.log("sensors found" + JSON.stringify(users));
+                        user: email,
+                        from: new Date(),
+                        to: null,
+                        sensor: name,
+                        amount: null
+                    });
 
-                                json_resp = {"status": 200, "data": users};
-                            }
-                            callback(null, json_resp);
-                        })
+                    newBill.save(function(err) {
 
-                    }
+                        console.log(err)
+                        if(!err){
+                            sensorSchema.find({"status": true}, function (err, users) {
+                                var json_resp;
+                                if (users) {
 
-                });
-            }
+                                    console.log("sensors found" + JSON.stringify(users));
 
-            else{
+                                    json_resp = {"status": 200, "data": users};
+                                }
+                                console.log("After starting the bill, sending data "+JSON.stringify(json_resp));
+                                callback(null, json_resp);
+                            })
 
-                console.log("nothing found ! ");
+                        }
+                        else{
+                            console.log("error staring bill process");
+                        }
+                    });
+                }
 
-            }
+            });
+        }
 
-        });
+        else{
+
+            console.log("nothing found ! ");
+
+        }
+
+    });
 
 }
+
+
+
+exports.unsubscribeSensor = function (msg, callback) {
+
+    var email = msg.email;
+    var name = msg.name;
+    console.log("Unsubscribing... "+email+" "+name);
+
+
+    sensorSchema.find({name:name}, function (err, users) {
+        var json_resp;
+
+        var d = new Date();
+        var result = users;
+        console.log("Specific info of sensor "+result);
+
+        if(users) {
+            userSchema.update({},{$pull:{subscribedSensors:{name  : name}}},{multi:true}, function (err, users2) {
+
+
+                if (err) {
+                    console.log(err);
+                    json_resp = {"status": 400};
+
+                }
+
+                else {
+                    var amount = "200$";
+                    billingSchema.update({sensor: name, user: email},{$set: {to: new Date(), amount : amount}},function(err, users){
+                        if(users) {
+                            console.log("billing schema updated");
+                            userSchema.find({"email": email}, function (err, users) {
+                                if (users[0].subscribedSensors.length>0) {
+
+                                    console.log("Rest is found " + JSON.stringify(users));
+
+                                    json_resp = {"status": 200, "data": users};
+                                }
+                                else{
+                                    json_resp = {"status" : 400};
+                                }
+                                callback(null, json_resp);
+                            })
+                        }
+                    })
+                }
+
+            });
+        }
+
+        else{
+
+            console.log("nothing found ! ");
+
+        }
+
+    });
+
+}
+
+
 
 exports.listToSubscribeSensors = function(msg, callback) {
 
@@ -169,54 +252,45 @@ exports.listToSubscribeSensors = function(msg, callback) {
         }
 
         else {
-               console.log("not found");
+            console.log("not found");
 
-            }
-                callback(null, json_resp);
-            });
         }
+        callback(null, json_resp);
+    });
+}
 
-    /*userSchema.find({"email": email}, function (err, users) {
-        var json_response;
-        var result = users[0].subscribedSensors[0];
+/*userSchema.find({"email": email}, function (err, users) {
+ var json_response;
+ var result = users[0].subscribedSensors[0];
+ console.log("the sensor to be deleted ! " + users + " " + result.name);
+ subscribeSensorSchema.find({}, function (err, user) {
+ console.log("user here " + JSON.stringify(user));
+ json_response = {"status": 200, "data": user}
+ callback(null, json_response);
+ });
+ }); */
 
-        console.log("the sensor to be deleted ! " + users + " " + result.name);
-
-        subscribeSensorSchema.find({}, function (err, user) {
-            console.log("user here " + JSON.stringify(user));
-            json_response = {"status": 200, "data": user}
-            callback(null, json_response);
-        });
-    }); */
-
-        /* subscribeSensorSchema.remove({"name" : result.name},function(err, rlt){
-            if(err){
-                console.log("error deleting the sensor");
-            }
-            else{
-
-                    subscribeSensorSchema.find({}, function(err, users) {
-
-                        console.log("here "+users);
-                        if (err)
-                            json_response = {"status": 400};
-                        else {
-                            if (users) {
-
-                                console.log("printinng deleted data " + users);
-                                json_response = {"status": 200, "data": users}
-                            }
-
-                            else
-                                json_response = {"status": 300};
-                        }
-
-                        callback(null, json_response);
-
-                    });
-            }
-
-            })*/
+/* subscribeSensorSchema.remove({"name" : result.name},function(err, rlt){
+ if(err){
+ console.log("error deleting the sensor");
+ }
+ else{
+ subscribeSensorSchema.find({}, function(err, users) {
+ console.log("here "+users);
+ if (err)
+ json_response = {"status": 400};
+ else {
+ if (users) {
+ console.log("printinng deleted data " + users);
+ json_response = {"status": 200, "data": users}
+ }
+ else
+ json_response = {"status": 300};
+ }
+ callback(null, json_response);
+ });
+ }
+ })*/
 
 
 
@@ -230,16 +304,13 @@ exports.mySensors = function(msg, callback) {
         if (err)
             json_response = {"status": 400};
         else {
-            if (users)
-                json_response = {"status": 200, "data": users[0].subscribedSensors};
-            else
+            if (users[0].subscribedSensors == null)
                 json_response = {"status": 300};
+
+            else
+                json_response = {"status": 200, "data": users[0].subscribedSensors};
         }
         callback(null, json_response);
     });
 }
-
-
-
-
 
