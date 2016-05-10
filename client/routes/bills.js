@@ -19,12 +19,23 @@ exports.myBills = function(req, res) {
         }
         else {
             if (results.status == 200) {
-                console.log("My Bills " + JSON.stringify(results.data));
 
-                //console.log("login " + req.session.adminId);
-                json_response = {"status": 200, "data": results.data}
+                var arr = new Array();
+                console.log("My Bills " + JSON.stringify(results.data));
+                for(i = 0; i<results.data.length; i++){
+                    if(results.data[i].amount==null){
+                        console.log("AMount "+results.data[i].amount);
+                    }
+                    else {
+
+                        arr.push(results.data[i]);
+                    }
+                }
+                console.log(JSON.stringify(arr));
+                json_response = {"status": 200, "data": arr}
                 res.send(json_response);
             }
+
             else if(results.status==300){
                 json_response = {"status": 300}
                 res.send(json_response);

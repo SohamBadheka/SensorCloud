@@ -1,7 +1,7 @@
 
 var listActiveSensors = angular.module('listActiveSensors', []);
 
-listActiveSensors.controller('listActiveSensors', function($scope, $http) {
+listActiveSensors.controller('listActiveSensors',['$scope','$rootScope','$http', function($scope,$rootScope, $http) {
 
     $http({
 
@@ -20,7 +20,6 @@ listActiveSensors.controller('listActiveSensors', function($scope, $http) {
     $scope.subscribe = function (name) {
 
 
-
             $http({
 
                 method: "POST",
@@ -32,11 +31,12 @@ listActiveSensors.controller('listActiveSensors', function($scope, $http) {
             }).success(function (data) {
 
                 $scope.sensors = data.data;
+                $rootScope.$broadcast('buttonClickedFromSubscribe')
             })
 
     }
 
-});
+}]);
 
 
 
@@ -67,6 +67,33 @@ listActiveSensors.controller('mySensors',['$scope','$rootScope','$http', functio
     }).error(function (error) {
         alert('My sensors error');
     });
+
+    $rootScope.$on('buttonClickedFromSubscribe', function () {
+        $http({
+
+            method: "GET",
+            url: '/mySensors'
+
+        }).success(function (data) {
+
+
+            if (data.status == 400) {
+                alert("something went wrong !");
+            }
+
+            else if(data.status==300){
+                alert("No other subscribed sensors !");
+            }
+            else {
+
+                $scope.mySensors = data.data;
+            }
+
+        }).error(function (error) {
+            alert('My sensors error');
+        });
+    });
+
 
     $scope.unsubscribe = function (name) {
 
