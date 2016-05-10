@@ -195,7 +195,7 @@ exports.getCurrentData = function(req, res) {
     var type = req.type;
     var city = req.city;
     var request = require('request');
-    var r = "http://api.openweathermap.org/data/2.5/weather?q="+city+"&APPID='Your ID'";
+    var r = "http://api.openweathermap.org/data/2.5/weather?q="+city+"&APPID=f17460fa055c8a087eb18ff9b451dc57";
     request(r, function (error, response, body) {
         //console.log("before condition"+body);
         console.log("get current data Response "+response.statusCode+" and  body " +body);
@@ -217,7 +217,7 @@ exports.getForecastData = function(req, res) {
     var city = req.city;
 
     var request = require('request');
-    var r = "http://api.openweathermap.org/data/2.5/forecast?q="+city+"&appid='Your ID'";
+    var r = "http://api.openweathermap.org/data/2.5/forecast?q="+city+"&appid=f17460fa055c8a087eb18ff9b451dc57";
 
     request(r, function (error, response, body) {
         //console.log("before condition"+body);
