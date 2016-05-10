@@ -200,7 +200,7 @@ exports.unsubscribeSensor = function (msg, callback) {
                 }
 
                 else {
-                    var amount = "200$";
+                    var amount = "1$";
                     console.log("updating...where user"+email+" and name is "+name);
                     billingSchema.update({sensor: name, user: email},{$set: {to: new Date(), amount : amount}},function(err, users){
                         if(users) {
