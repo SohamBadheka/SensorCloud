@@ -161,7 +161,7 @@
 										<td>{{$index+1}}</td>
 										<td>{{k.name}}</td>
 										<td>{{k.type}}</td>
-										<td><button class="btn btn-primary">Unsubscribe</button></td>
+										<td><button class="btn btn-primary" ng-click="unsubscribe(k.name)">Unsubscribe</button></td>
 									</tbody>
 								</table>
 
@@ -218,7 +218,7 @@
 										<td>{{k.owner}}</td>
 										<td>{{k.city}}</td>
 										<td>{{k.state}}</td>
-										<td><button class="btn btn-primary" ng-click="subscribe(k.name);">{{subscribebtn}}</button></td>
+										<td><button class="btn btn-primary" ng-click="subscribe(k.name);">Subscribe</button></td>
 									</tr>
 
 
@@ -269,7 +269,7 @@
 
 				<div ng-show="currentData">
 					<h1>Details :</h1><hr>
-				<h2 style="margin-left:5px;;">Current statistics for weather data !</h2>
+				<h2 style="margin-left:5px;">Current statistics for weather data !</h2>
 
 					<p>Weather : {{weather}}</p>
 					<p>Temp : {{temp}}</p>
@@ -307,8 +307,34 @@
 
 				</div>
 
-		<div class="billing">
-			<p>billing</p>
+		<div class="billing" ng-controller = "myBills">
+			<table class="table">
+				<thead class="thead-inverse">
+				<tr>
+					<th>#</th>
+					<th>Name</th>
+					<th>From</th>
+					<th>To</th>
+					<th>Amount</th>
+					<th>Action</th>
+
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat = "k in bills">
+					<td>{{$index+1}}</td>
+					<td>{{k.sensor}}</td>
+					<td>{{k.from}}</td>
+					<td>{{k.to}}</td>
+					<td>{{k.amount}}</td>
+
+					<td><button class="btn btn-primary" ng-click="subscribe(k.name);">Pay</button></td>
+				</tr>
+
+
+				</tbody>
+			</table>
+
 		</div>
 </div>
 </body>
