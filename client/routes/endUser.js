@@ -161,6 +161,41 @@ exports.subscribeSensor = function(req, res){
 }
 
 
+exports.unsubscribeSensor = function(req, res){
+  var name = req.param('name');
+
+  var msg_payload = {
+    "email": "test@test.com",
+    "name" : name,
+    "func": "unsubscribeSensor"
+  };
+
+
+  mq_client.make_request('endUser_queue', msg_payload, function (err, results) {
+
+    if (err) {
+      //console.log(err);
+      res.status(500).send(null);
+    }
+    else {
+      if(results.status == 200) {
+        console.log("about results" + JSON.stringify(results.data));
+
+        json_response = {"status": 200, "data": results.data}
+        res.send(json_response);
+      }
+      else if(results.status == 300){
+        json_response = {"status":300}
+      }
+      else
+      {
+        json_response = {"status" : 400}
+        res.send(json_response);
+      }
+    }
+  });
+}
+
 
 exports.listToSubscribeSensors = function(req, res) {
 
@@ -219,11 +254,17 @@ exports.mySesnors = function(req, res) {
         json_response = {"status": 200, "data": results.data}
         res.send(json_response);
       }
-      else {
+      else if(results.status==300){
         json_response = {"status": 300}
+        res.send(json_response);
+      }
+      else {
+        json_response = {"status" : 400}
         res.send(json_response);
       }
     }
 
   });
 }
+
+
