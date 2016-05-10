@@ -14,8 +14,9 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes');
 var endUser = require('./routes/endUser');
+var bills = require('./routes/bills');
 var map = require('./routes/map');
-var billing = require('./routes/billing');
+
 var sensors = require('./routes/sensors');
 var app = express();
 
@@ -61,16 +62,17 @@ app.get('/listSensors',sensors.listSensors);
 app.post('/activateSensor',sensors.activateSensor);
 app.post('/deactivateSensor',sensors.deactivateSensor);
 app.post('/subscribeSensor', endUser.subscribeSensor);
+app.post('/unsubscribeSensor', endUser.unsubscribeSensor);
 app.get('/mySensors', endUser.mySesnors);
 app.get('/listToSubscribeSensors', endUser.listToSubscribeSensors);
 app.get('/getCurrentData',sensors.getCurrentData);
 app.get('/getForecastData', sensors.getForecastData);
+app.get('/myBills', bills.myBills);
 
 //app.post('/deleteSensor', sensors.deleteSensor);
 
 //app.get('/map',map.showMap);
 //app.get('/analysis',users.analysis);
-//app.get('/billing',billing.viewBill);
 
 
 
