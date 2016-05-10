@@ -259,41 +259,6 @@ exports.listToSubscribeSensors = function(msg, callback) {
     });
 }
 
-/*userSchema.find({"email": email}, function (err, users) {
- var json_response;
- var result = users[0].subscribedSensors[0];
- console.log("the sensor to be deleted ! " + users + " " + result.name);
- subscribeSensorSchema.find({}, function (err, user) {
- console.log("user here " + JSON.stringify(user));
- json_response = {"status": 200, "data": user}
- callback(null, json_response);
- });
- }); */
-
-/* subscribeSensorSchema.remove({"name" : result.name},function(err, rlt){
- if(err){
- console.log("error deleting the sensor");
- }
- else{
- subscribeSensorSchema.find({}, function(err, users) {
- console.log("here "+users);
- if (err)
- json_response = {"status": 400};
- else {
- if (users) {
- console.log("printinng deleted data " + users);
- json_response = {"status": 200, "data": users}
- }
- else
- json_response = {"status": 300};
- }
- callback(null, json_response);
- });
- }
- })*/
-
-
-
 exports.mySensors = function(msg, callback) {
 
     var email = msg.email;
