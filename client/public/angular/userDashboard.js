@@ -11,16 +11,15 @@ listActiveSensors.controller('listActiveSensors', function($scope, $http) {
     }).success(function (data) {
 
         $scope.sensors = data.data;
-        alert(JSON.stringify(data));
+
 
     }).error(function (error) {
-        alert('error');
+        alert('basic error');
     });
-$scope.subscribebtn = "subscribe";
 
     $scope.subscribe = function (name) {
 
-        $scope.subscribebtn = "unsubscribe";
+
 
             $http({
 
@@ -32,36 +31,18 @@ $scope.subscribebtn = "subscribe";
 
             }).success(function (data) {
 
-                $http({
-
-                    method: "GET",
-                    url: '/mySensors'
-
-                }).success(function (data) {
-
-
-                    if (data.status == 400) {
-                        alert("something went wrong !");
-                    }
-
-                    else {
-
-                        $scope.mySensors = data.data;
-                    }
-
-                }).error(function (error) {
-                    alert('error');
-                });
-
                 $scope.sensors = data.data;
-
             })
 
     }
+
 });
 
 
-listActiveSensors.controller('mySensors', function($scope, $http) {
+
+
+
+listActiveSensors.controller('mySensors',['$scope','$rootScope','$http', function($scope, $rootScope, $http) {
 
     $http({
 
@@ -75,20 +56,61 @@ listActiveSensors.controller('mySensors', function($scope, $http) {
             alert("something went wrong !");
         }
 
+        else if(data.status==300){
+            alert("No other subscribed sensors !");
+        }
         else {
 
             $scope.mySensors = data.data;
         }
 
     }).error(function (error) {
-        alert('error');
+        alert('My sensors error');
     });
 
+    $scope.unsubscribe = function (name) {
 
-});
+        $http({
+
+            method: "POST",
+            url: "/unsubscribeSensor",
+            data: {
+                "name": name
+            }
+
+        }).success(function (data) {
+
+            $http({
+
+                method: "GET",
+                url: '/mySensors'
+
+            }).success(function (data) {
 
 
-listActiveSensors.controller('analysis', function($scope, $http) {
+                if (data.status == 400) {
+                    alert("something went wrong !");
+                }
+                else if (data.status == 300) {
+                    alert("No data");
+
+                }
+                else {
+
+                    $scope.mySensors = data.data;
+                    $rootScope.$broadcast('buttonClicked');
+                }
+
+            }).error(function (error) {
+                alert('Unsubscribe error');
+            });
+        })
+
+    }
+}]);
+
+
+listActiveSensors.controller('analysis', ['$scope', '$rootScope', '$http', function($rootScope, $scope, $http) {
 
     $scope.currentData = false;
     $scope.forecastData = false;
@@ -104,16 +126,44 @@ listActiveSensors.controller('analysis', function($scope, $http) {
             alert("something went wrong !");
         }
 
-        else {
+        else if(data.status == 200){
 
             $scope.sensors = data.data;
         }
 
     }).error(function (error) {
-        alert('error');
+        alert("ERROR");
     });
+
+    $rootScope.$on('buttonClicked', function () {
+
+        $http({
+
+            method: "GET",
+            url: '/mySensors'
+
+        }).success(function (data) {
+
+
+            if (data.status == 400) {
+                alert("something went wrong !");
+            }
+
+            else if (data.status == 200) {
+
+                $scope.sensors = data.data;
+                $scope.currentData = false;
+                $scope.forecastData = false;
+            }
+
+        }).error(function (error) {
+            alert("ERROR");
+        });
+    });
+
+
     $scope.getCurrentData = function (type, city) {
-        $scope.currentData = true;
+       $scope.currentData = true;
         $scope.forecastData = false;
 
         $http({
@@ -127,13 +177,14 @@ listActiveSensors.controller('analysis', function($scope, $http) {
 
         }).success(function (data) {
 
-
+            //alert(JSON.stringify(data));
             if (data.status == 400) {
                 alert("something went wrong !");
             }
 
             else {
 
+                //alert(JSON.stringify(data.main));
                 $scope.weather = data.weather[0].main;
                 $scope.temp = data.main.temp;
                 $scope.maxTemp = data.main.temp_min;
@@ -142,6 +193,7 @@ listActiveSensors.controller('analysis', function($scope, $http) {
                 $scope.humidity = data.main.humidity;
 
             }
+
         });
   }
     $scope.getForecastData = function (type, city) {
@@ -173,5 +225,45 @@ listActiveSensors.controller('analysis', function($scope, $http) {
         });
     }
 
-});
+}]);
+
+
+listActiveSensors.controller('myBills', ['$scope','$rootScope', '$http', function($scope, $rootScope, $http) {
+
+
+        $http({
+
+            method: "GET",
+            url: '/myBills'
+
+        }).success(function (data) {
+
+
+            $scope.bills = data.data;
+
+
+        }).error(function (error) {
+            alert(error);
+        });
+
+    $rootScope.$on('buttonClicked', function (){
+
+        $http({
+
+            method: "GET",
+            url: '/myBills'
+
+        }).success(function (data) {
+
+
+            $scope.bills = data.data;
+
+
+        }).error(function (error) {
+            alert(error);
+        });
+
+    });
+
+}]);
 
