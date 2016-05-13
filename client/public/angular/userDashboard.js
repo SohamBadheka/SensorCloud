@@ -188,6 +188,32 @@ listActiveSensors.controller('analysis', ['$scope', '$rootScope', '$http', funct
         });
     });
 
+    $rootScope.$on('buttonClickedFromSubscribe', function () {
+        $http({
+
+            method: "GET",
+            url: '/mySensors'
+
+        }).success(function (data) {
+
+
+            if (data.status == 400) {
+                alert("something went wrong !");
+            }
+
+            else if(data.status==300){
+                alert("No other subscribed sensors !");
+            }
+            else {
+
+                $scope.sensors = data.data;
+            }
+
+        }).error(function (error) {
+            alert('My sensors error');
+        });
+    });
+
 
     $scope.getCurrentData = function (type, city) {
        $scope.currentData = true;

@@ -92,14 +92,33 @@ app.use(function(err, req, res, next) {
 
 var cluster = require('cluster');
 var os = require('os');
+if (cluster.isMaster) {
 
-if (cluster.isMaster)
-// Spawn as many workers as there are CPUs in the system.
-    {
-        for (var i = 0, n = os.cpus().length; i<n; i += 1)
-        cluster.fork();
-        console.log("forked workers !");
+    // Keep track of http requests
+    var numReqs = 0;
+    setInterval(function () {
+        console.log('numReqs =', numReqs);
+}, 1000);
+
+    // Count requests
+    function messageHandler(msg) {
+        if (msg.cmd && msg.cmd == 'notifyRequest') {
+            numReqs += 1;
+        }
     }
+
+    // Start workers and listen for messages containing notifyRequest
+    const numCPUs = require('os').cpus().length;
+    for (var i = 0; i < numCPUs; i++) {
+        cluster.fork();
+    }
+
+    Object.keys(cluster.workers).forEach(function (id) {
+        cluster.workers[id].on('message', messageHandler);
+});
+
+}
+
 else {
     mongo.connect(mongoSessionConnectURL, function () {
         console.log('Connected to mongo at: ' + mongoSessionConnectURL);
