@@ -69,14 +69,6 @@ app.get('/getCurrentData',sensors.getCurrentData);
 app.get('/getForecastData', sensors.getForecastData);
 app.get('/myBills', bills.myBills);
 
-//app.post('/deleteSensor', sensors.deleteSensor);
-
-//app.get('/map',map.showMap);
-//app.get('/analysis',users.analysis);
-
-
-
-/// error handlers
 
 // development error handler
 // will print stacktrace
@@ -98,9 +90,24 @@ app.use(function(err, req, res, next) {
     });
 });
 
-mongo.connect(mongoSessionConnectURL, function(){
-    console.log('Connected to mongo at: ' + mongoSessionConnectURL);
-    http.createServer(app).listen(app.get('port'), function(){
-        console.log('Express server listening on port ' + app.get('port'));
+var cluster = require('cluster');
+var os = require('os');
+
+if (cluster.isMaster)
+// Spawn as many workers as there are CPUs in the system.
+    {
+        for (var i = 0, n = os.cpus().length; i<n; i += 1)
+        cluster.fork();
+        console.log("forked workers !");
+    }
+else {
+    mongo.connect(mongoSessionConnectURL, function () {
+        console.log('Connected to mongo at: ' + mongoSessionConnectURL);
+        http.createServer(app).listen(app.get('port'), function () {
+            console.log('Express server listening on port ' + app.get('port'));
+        });
     });
-});
+}
+
+
+
