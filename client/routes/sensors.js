@@ -7,7 +7,17 @@ exports.loginSensorAdmin = function(req, res){
 
 }
 exports.sensorAdminDashboard = function(req, res){
-    res.render('sensorAdminDashboard');
+    if(req.session.admin){
+        console.log(req.session.admin);
+        res.header('Cache-Control','no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+        res.render('sensorAdminDashboard');
+    }
+    else{
+
+        console.log("no session found !");
+        res.redirect('/loginSensorAdmin');
+    }
+
 }
 
 exports.loginCheckSensorAdmin = function(req, res) {
@@ -30,8 +40,8 @@ exports.loginCheckSensorAdmin = function(req, res) {
         }
         else {
             if(results.status == 200) {
-                //console.log("about results" + JSON.stringify(results));
-                req.session.sensorAdmin = results.data;
+                console.log("Admin login results" + JSON.stringify(results.data));
+                req.session.admin = results.data;
                 //console.log("login " + req.session.adminId);
                 json_response = {"status": 200, "data": results.data}
                 res.send(json_response);
@@ -233,3 +243,8 @@ exports.getForecastData = function(req, res) {
     });
 }
 
+
+exports.logout = function(req, res) {
+    req.session.destroy();
+    res.redirect('/loginSensorAdmin');
+};

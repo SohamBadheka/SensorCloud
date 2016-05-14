@@ -68,7 +68,8 @@ app.get('/listToSubscribeSensors', endUser.listToSubscribeSensors);
 app.get('/getCurrentData',sensors.getCurrentData);
 app.get('/getForecastData', sensors.getForecastData);
 app.get('/myBills', bills.myBills);
-
+app.get('/logout',endUser.logout);
+app.get('/logoutAdmin',sensors.logout);
 //app.post('/deleteSensor', sensors.deleteSensor);
 
 //app.get('/map',map.showMap);

@@ -77,9 +77,9 @@ exports.loginCheckUser = function (req, res) {
     }
     else {
       if(results.status == 200) {
-        console.log("about results" + JSON.stringify(results.data));
+        console.log("Login check results" + JSON.stringify(results.data));
         req.session.email = results.data;
-        //console.log("login " + req.session.adminId);
+        console.log("login is " + req.session.email);
         json_response = {"status": 200, "data": results.data}
         res.send(json_response);
       }
@@ -92,9 +92,7 @@ exports.loginCheckUser = function (req, res) {
   });
 }
 exports.listActiveSensors = function(req, res){
-if(req.session.email){
-  console.log("che active");
-}
+
   var msg_payload = {
     "func": "listActiveSensors"
   }
@@ -123,6 +121,8 @@ exports.userDashboard = function(req, res){
     res.render('userDashboard');
   }
   else{
+
+  console.log("no session found !");
     res.redirect('/');
   }
 
@@ -132,7 +132,7 @@ exports.subscribeSensor = function(req, res){
   var name = req.param('name');
 
   var msg_payload = {
-    "email": "test@test.com",
+    "email": req.session.email,
     "name" : name,
     "func": "subscribeSensor"
   };
@@ -165,7 +165,7 @@ exports.unsubscribeSensor = function(req, res){
   var name = req.param('name');
 
   var msg_payload = {
-    "email": "test@test.com",
+    "email": req.session.email,
     "name" : name,
     "func": "unsubscribeSensor"
   };
@@ -201,7 +201,7 @@ exports.listToSubscribeSensors = function(req, res) {
 
 
   var msg_payload = {
-    "email": "test@test.com",
+    "email": req.session.email,
     "func": "listToSubscribeSensors"
   };
 
@@ -231,7 +231,7 @@ exports.listToSubscribeSensors = function(req, res) {
 
 exports.mySesnors = function(req, res) {
 
-  var email = "test@test.com"
+  var email = req.session.email;
   console.log("In routes mysensor");
   var msg_payload = {
     "email": email,
@@ -267,4 +267,8 @@ exports.mySesnors = function(req, res) {
   });
 }
 
+exports.logout = function(req, res) {
+  req.session.destroy();
+  res.redirect('/');
+};
 
