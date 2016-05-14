@@ -187,7 +187,26 @@ exports.unsubscribeSensor = function (msg, callback) {
 
         var d = new Date();
         var result = users;
-        console.log("Specific info of sensor "+result);
+
+        var amount;
+
+            var type = users[0].type;
+            console.log("Finding the bill"+JSON.stringify(users)+"type is"+ users[0].type);
+            if (type == "Free") {
+                var amount = 0;
+            }
+            else if (type == "Starter") {
+                var amount = 1;
+
+
+            }
+            else if (type == "Medium") {
+                var amount = 5;
+            }
+            else {
+                var amount = 20;
+            }
+
 
         if(users) {
             userSchema.update({},{$pull:{subscribedSensors:{name  : name}}},{multi:true}, function (err, users2) {
@@ -200,8 +219,8 @@ exports.unsubscribeSensor = function (msg, callback) {
                 }
 
                 else {
-                    var amount = "1$";
-                    console.log("updating...where user"+email+" and name is "+name);
+
+                    console.log("updating...where user"+email+" and name is "+name+ "amount is "+amount);
                     billingSchema.update({sensor: name, user: email},{$set: {to: new Date(), amount : amount}},function(err, users){
                         if(users) {
                             console.log("billing schema updated");

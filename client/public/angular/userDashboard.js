@@ -36,7 +36,15 @@ listActiveSensors.controller('listActiveSensors',['$scope','$rootScope','$http',
 
     }
 
+
 }]);
+
+listActiveSensors.controller('travel', function($scope, $http) {
+
+    $scope.check = function () {
+        alert($scope.current);
+    }
+});
 
 
 
@@ -155,6 +163,7 @@ listActiveSensors.controller('analysis', ['$scope', '$rootScope', '$http', funct
 
         else if(data.status == 200){
 
+
             $scope.sensors = data.data;
         }
 
@@ -162,7 +171,7 @@ listActiveSensors.controller('analysis', ['$scope', '$rootScope', '$http', funct
         alert("ERROR");
     });
 
-    $rootScope.$on('buttonClicked', function () {
+    $rootScope.$on('buttonClickedFromSubscribe', function () {
 
         $http({
 

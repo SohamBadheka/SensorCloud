@@ -21,38 +21,52 @@
 		$(document).ready(function () {
 
 			$('.analysis').hide();
+			$('.cost').hide();
 			$('.billing').hide();
 			$('.dashboard').show();
-			$('.map').hide();
+			$('.travel').hide();
 
 
 			$(".click0").on("click", function(){
 
 				$('.dashboard').show();
+				$('.cost').hide();
 				$('.analysis').hide();
 				$('.billing').hide();
-				$('.map').hide();
+				$('.travel').hide();
 
 			})
 
 			$(".click1").on("click", function () {
 				$('.analysis').hide();
+				$('.cost').show();
 				$('.billing').hide();
 				$('.dashboard').hide();
-				$('.map').show();
+				$('.travel').hide();
 			})
 
 			$(".click2").on("click", function () {
 				$('.analysis').show();
+				$('.cost').hide();
 				$('.billing').hide();
 				$('.dashboard').hide();
-				$('.map').hide();
+				$('.travel').hide();
 			})
+
+
 			$(".click3").on("click", function () {
 				$('.analysis').hide();
+				$('.cost').hide();
+				$('.billing').hide();
+				$('.dashboard').hide();
+				$('.travel').show();
+			})
+			$(".click4").on("click", function () {
+				$('.analysis').hide();
+				$('.cost').hide();
 				$('.billing').show();
 				$('.dashboard').hide();
-				$('.map').hide();
+				$('.travel').hide();
 			})
 		});
 	</script>
@@ -94,9 +108,11 @@
 		</form>
 		<ul class="nav menu">
 			<li><a href="javascript:void(0)" class="click0">Dashboard</a></li>
-			<li><a href="javascript:void(0)" class="click1">Map</a></li>
+			<li><a href="javascript:void(0)" class ="click1">Cost Plan</a></li>
 			<li><a href="javascript:void(0)" class="click2">Analysis</a></li>
-			<li><a href="javascript:void(0)" class="click3">Biling</a></li>
+			<li><a href="javascript:void(0)" class="click3">Travel</a></li>
+
+			<li><a href="javascript:void(0)" class="click4">Biling</a></li>
 
 		</ul>
 
@@ -105,12 +121,7 @@
 		
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 
-		<div class="row">
-			<ol class="breadcrumb">
-				<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
-				<li class="active">Icons</li>
-			</ol>
-		</div><!--/.row-->
+
 
 		<div class="row">
 			<div class="col-lg-12">
@@ -234,10 +245,86 @@
 			</div><!--/.row-->
 		</div>
 
-		<div class="map">
+		<div class="cost">
 
-			<p>map</p>
+			<div class="col-md-12">
+			<table class="table table-bordered">
+				<thead class="thead-inverse">
+				<tr class="table-active">
+
+					<th>Plan</th>
+
+					<th>Current Data</th>
+					<th>5 days Forecast</th>
+					<th>16 days Forecast</th>
+					<th>SSL</th>
+					<th> Calls per Day</th>
+					<th>Cost</th>
+
+
+				</tr>
+				</thead>
+				<tbody>
+				<tr class="table-success">
+					<td>Free</td>
+					<td>Yes</td>
+					<td>No</td>
+					<td>No</td>
+					<td>No</td>
+					<td>100</td>
+					<td>Free</td>
+				</tr>
+				<tr>
+					<td>Starter</td>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>No</td>
+					<td>No</td>
+					<td>500</td>
+					<td>1$ / day</td>
+				</tr>
+
+				<tr class="table-info">
+					<td>Medium</td>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>No</td>
+					<td>2000</td>
+					<td>5$ / day</td>
+				</tr>
+				<tr class="table-warning">
+					<td>Advanced</td>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>Yes</td>
+					<td>10,000</td>
+					<td>20$ / day</td>
+				</tr>
+
+
+
+				</tbody>
+			</table>
+			</div>
+			<div class="col-md-1"></div>
+</div>
+
+		<div class="travel" ng-controller="travel">
+			<br><br>
+			<div class ="col-md-1"></div>
+
+			<div class = "col-md-10">
+
+				<h3>Tell us where and when are you plannig to travel ?</h3><hr>
+				<div class="col-md-9" style="display:flex"><input type ="text" ng-model ="soham" class="form-control" placeholder="City"><input class="form-control" type="datetime-local" ng-model="current"></div><div class="col-md-3"><button class="btn btn-primary" ng-click="check()">Check</button></div>
+			</div>
+			<div class="col-md-1"></div>
+
 		</div>
+
+
 		<div class="analysis" ng-controller="analysis">
 
 			<table class="table">
@@ -329,6 +416,7 @@
 
 					<td><button class="btn btn-primary" ng-click="subscribe(k.name);">Pay</button></td>
 				</tr>
+
 
 
 				</tbody>
