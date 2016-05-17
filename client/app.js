@@ -99,9 +99,27 @@ app.use(function(err, req, res, next) {
     });
 });
 
-mongo.connect(mongoSessionConnectURL, function(){
-    console.log('Connected to mongo at: ' + mongoSessionConnectURL);
-    http.createServer(app).listen(app.get('port'), function(){
-        console.log('Express server listening on port ' + app.get('port'));
-    });
+var cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
+
+if (cluster.isMaster) {
+    // Fork workers.
+    for (var i = 0; i < numCPUs; i++) {
+        cluster.fork();
+    }
+
+    cluster.on('exit', function(worker, code, signal) {
+        console.log("worker"+worker.process.pid+" died");
+
 });
+}
+else {
+
+
+    mongo.connect(mongoSessionConnectURL, function () {
+        console.log('Connected to mongo at: ' + mongoSessionConnectURL);
+        http.createServer(app).listen(app.get('port'), function () {
+            console.log('Express server listening on port ' + app.get('port'));
+        });
+    });
+}
