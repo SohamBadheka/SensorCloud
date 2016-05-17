@@ -171,6 +171,35 @@ listActiveSensors.controller('analysis', ['$scope', '$rootScope', '$http', funct
         alert("ERROR");
     });
 
+    $rootScope.$on('buttonClicked', function () {
+
+        $http({
+
+            method: "GET",
+            url: '/mySensors'
+
+        }).success(function (data) {
+
+
+            if (data.status == 400) {
+                alert("something went wrong !");
+            }
+
+            else if (data.status == 200) {
+
+                $scope.sensors = data.data;
+                $scope.currentData = false;
+                $scope.forecastData = false;
+            }
+
+        }).error(function (error) {
+            alert("ERROR");
+        });
+    });
+
+
+
+
     $rootScope.$on('buttonClickedFromSubscribe', function () {
 
         $http({
