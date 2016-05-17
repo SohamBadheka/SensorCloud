@@ -1,5 +1,7 @@
 # SensorCloud
 
+(Still in a testing phase !)
+
 Tried to simulate the process, roles of a sensor admin which provides the all the users an access to use his sensors.
 
 **SENSOR ADMIN :** This module activates the sensors from its dashboard and as and when they activate the sensor, the end user can start listening/using the data that the sensor senses !
