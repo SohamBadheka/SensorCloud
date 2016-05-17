@@ -103,9 +103,11 @@ var cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 
 if (cluster.isMaster) {
+    cluster.schedulingPolicy = cluster.SCHED_RR;
     // Fork workers.
     for (var i = 0; i < numCPUs; i++) {
-        cluster.fork();
+        var worker = cluster.fork();
+        console.log("Online"+i);
     }
 
     cluster.on('exit', function(worker, code, signal) {
