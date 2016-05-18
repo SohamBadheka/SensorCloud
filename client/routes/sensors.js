@@ -202,8 +202,9 @@ exports.deactivateSensor = function(req, res){
 
 
 exports.getCurrentData = function(req, res) {
-    var type = req.type;
-    var city = req.city;
+    var type = req.param('type');
+    var city = req.param('city');
+    console.log("city is "+ city);
     var request = require('request');
     var r = "http://api.openweathermap.org/data/2.5/weather?q="+city+"&units=metric&APPID=f17460fa055c8a087eb18ff9b451dc57";
     request(r, function (error, response, body) {

@@ -163,7 +163,7 @@ listActiveSensors.controller('analysis', ['$scope', '$rootScope', '$http', funct
 
         else if(data.status == 200){
 
-            alert(JSON.stringify(data.data));
+
             for(var i = 0; i<data.data.length; i++)
             {
                 if (data.data[0].type == "Starter") {
