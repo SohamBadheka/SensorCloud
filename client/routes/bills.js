@@ -2,7 +2,7 @@ var mq_client = require('../rpc/client');
 
 exports.myBills = function(req, res) {
 
-    var email = "test@test.com"
+    var email = req.session.email;
     console.log("In routes bills");
     var msg_payload = {
         "email": email,

@@ -163,8 +163,15 @@ listActiveSensors.controller('analysis', ['$scope', '$rootScope', '$http', funct
 
         else if(data.status == 200){
 
-
+            alert(JSON.stringify(data.data));
+            for(var i = 0; i<data.data.length; i++)
+            {
+                if (data.data[0].type == "Starter") {
+                    $scope.forecastData = false;
+                }
+            }
             $scope.sensors = data.data;
+
         }
 
     }).error(function (error) {
@@ -216,6 +223,12 @@ listActiveSensors.controller('analysis', ['$scope', '$rootScope', '$http', funct
 
             else if (data.status == 200) {
 
+                for(var i = 0; i<data.data.length; i++)
+                {
+                    if (data.data[0].type == "Starter") {
+                        $scope.forecastDataBtn = false;
+                    }
+                }
                 $scope.sensors = data.data;
                 $scope.currentData = false;
                 $scope.forecastData = false;
